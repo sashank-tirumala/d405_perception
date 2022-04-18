@@ -98,3 +98,4 @@ colormask("/media/YertleDrive4/layer_grasp/images/Camera/0.jpg")
 #Grey hue[0 179] saturation [0 100] value [0 100]
 #white hue [65 108] saturation [88 120] value [104 255]
 #Yellow hue [65 108] saturation [0 88] value [104 255]
+#Background hue [0 40] saturation [0 255] value [0 255]
