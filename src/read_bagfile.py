@@ -33,6 +33,6 @@ def create_video_array(bagfile_path, image_topic = ['/d405_rgb'], save_path="./"
         i=i+1
    
 if(__name__ == "__main__"):
-    create_video_array(bagfile_path="/home/catkin_ws/src/d405/bag/Camera.bag", save_path="/media/YertleDrive4/layer_grasp/images", del_if_dir_exists=True)
+    create_video_array(bagfile_path="/media/YertleDrive4/layer_grasp/bagfiles/2022-04-18-16-39-37.bag", save_path="/media/YertleDrive4/layer_grasp/images", del_if_dir_exists=True)
     
     pass
