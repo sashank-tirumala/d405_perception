@@ -94,8 +94,8 @@ colormask("/media/YertleDrive4/layer_grasp/images/Camera/0.jpg")
 #Noting Down the values for different clothes: 
 #We might want to subtract different masks to be smart about this -- to do later
 #Blue hue [43 95] saturation [138 255] value[60 255]
-#Red hue [0 179] saturation [106 210] value [1 92]
-#Grey hue[0 179] saturation [0 100] value [0 100]
+#Red hue [0 179] saturation [72 218] value [94 179]
+#Grey hue[0 179] saturation [0 255] value [0 100]
 #white hue [65 108] saturation [88 120] value [104 255]
 #Yellow hue [65 108] saturation [0 88] value [104 255]
 #Background hue [0 40] saturation [0 255] value [0 255]
