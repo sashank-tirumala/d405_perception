@@ -1,4 +1,4 @@
-## Execution (in theCat need to document for other pcs later)
+## Execution (in theCat only, uses a singularity container)
 ### Run D405 Node to publish color_img (Depth image facing issues with ROS msg)
 1. `sudo singularity shell -B /media/YertleDrive4:/media/YertleDrive4 -w noetic/`
 2. `source /home/catkin_ws/devel/setup.bash`
