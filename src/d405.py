@@ -5,6 +5,7 @@ import cv2
 import ros_numpy
 from sensor_msgs.msg import Image
 import rospy
+from rospy.numpy_msg import numpy_msg
 
 if(__name__ == "__main__"):
 # Configure depth and color streams
@@ -25,8 +26,8 @@ if(__name__ == "__main__"):
 
     #Start a ROS Publisher
     rospy.init_node("d405")
-    pub = rospy.Publisher('d405_depth', Image, queue_size=10)
-    pub = rospy.Publisher('d405_rgb', Image, queue_size=10)
+    pub_depth = rospy.Publisher('d405_depth', Image, queue_size=10)
+    pub_rgb = rospy.Publisher('d405_rgb', Image, queue_size=10)
     rate = rospy.Rate(30)
     while not rospy.is_shutdown():
         # Wait for a coherent pair of frames: depth and color
@@ -37,6 +38,10 @@ if(__name__ == "__main__"):
             continue
         # Convert images to numpy arrays
         depth_image = np.asanyarray(depth_frame.get_data())
+        # depth_image = np.stack([depth_image, depth_image, depth_image], axis=0)
+        # depth_image = depth_image.transpose(1,2,0)
+        depth_image = ros_numpy.msgify(Image, depth_image, encoding='16UC1')
+        pub_depth.publish(depth_image)
         color_image = np.asanyarray(color_frame.get_data())
         # print(depth_image.shape)
         # print(color_image.shape)
@@ -44,6 +49,6 @@ if(__name__ == "__main__"):
         color_image = ros_numpy.msgify(Image, color_image, encoding='bgr8')
 
         # pub.publish(depth_image)
-        pub.publish(color_image)
+        pub_rgb.publish(color_image)
         # rospy.loginfo("here")
 
