@@ -44,8 +44,7 @@ def visualize_image(rgb_ori_img, mask_img, color_label, color_values):
 
 def generate_dataset(dataset_dir, mask_vals ,color_label):
     rgb_dir = dataset_dir + "/rgb"
-    images = os.listdir(rgb_dir)[:5]
-    print(images)
+    images = os.listdir(rgb_dir)
     mask_dir = dataset_dir + "/masks"
     if(os.path.isdir(mask_dir)):
         print("Mask Directory already exists!")
@@ -57,20 +56,63 @@ def generate_dataset(dataset_dir, mask_vals ,color_label):
         dirn = mask_dir+"/"+str(val)
         os.makedirs(dirn)
     for i in range(len(images)):
-        print(rgb_dir+"/"+images[i])
+        # print(rgb_dir+"/"+images[i])
         img = np.load(rgb_dir+"/"+images[i])
-        print(img.shape)
+        # print(img.shape)
         mask, _ = generate_mask_for_image(img, mask_vals, color_label)
         for j in range(mask.shape[-1]):
             val = int(np.max(mask[:,:,j]))
             save_path = mask_dir+"/"+str(val)
             temp = mask[:,:,j]/val
-            np.save(save_path+"/"+str(i)+".npy",temp)
+            np.save(save_path+"/"+images[i],temp)
         i+=1
     print("done generating dataset")
 
-    pass   
+def test_masks(dataset_dir):
+    mask_vals = {
+            "blue_low": np.array([77, 149, 120], np.uint8),
+            "blue_high": np.array([107, 255, 255], np.uint8),
+            "grey_low": np.array([77, 0, 0], np.uint8),
+            "grey_high": np.array([107, 255, 115], np.uint8),
+        }
+    color_label ={
+        'blue':2,
+        'grey':1
+    }
+    color_values={
+            "blue" : [255, 0, 0],
+            "grey" : [100, 100, 100],
+        }
+    rgb_dir = dataset_dir + "/rgb"
+    images = os.listdir(rgb_dir)[:5]
+    print(images)
+    mask_dir = dataset_dir + "/masks"
+    mask_len = len(os.listdir(mask_dir))
+    fname = os.listdir(mask_dir+"/"+os.listdir(mask_dir)[0])[0]
+    frgb = rgb_dir+"/"+fname
+    img_rgb = np.load(frgb)
+    mask_imgs=[]
+    print(mask_len)
+    for i in range(1, mask_len+1):
+        mask_img = np.load(mask_dir+"/"+str(i)+"/"+fname)*i
+        mask_imgs.append(mask_img)
+
+    mask_img_list, final_img = generate_mask_for_image(img_rgb, mask_vals, color_label)
+    # for i in range(len(mask_img_list)):
+    #     im1 = mask_img_list[i]
+    #     im2 = mask_imgs[i]
+    #     print(im1 == im2)
+    mask_imgs = np.stack(mask_imgs, axis=-1)
+    final_img2 = np.amax(mask_imgs, axis=-1)
+    print((final_img == final_img2).all())
+
+    # visualize_image(img_rgb, final_img2, color_label, color_values)
+    
+
+    
+
 if(__name__ == "__main__"):
+    # test_masks("/media/YertleDrive4/layer_grasp/dataset/test")
     img = np.load("/media/YertleDrive4/layer_grasp/dataset/test/rgb/217.npy")
     mask_vals = {
             "blue_low": np.array([77, 149, 120], np.uint8),
