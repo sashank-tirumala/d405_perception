@@ -4,6 +4,8 @@ import argparse
 import IPython
 import os
 import shutil
+import matplotlib
+import matplotlib.pyplot as plt
 #Blue hue [77 107] sat [149 255] value [120 255]
 #Grey hue [77 107] sat [0 255] value [0 115]
 def generate_mask_for_image(rgb_img, mask_vals, color_label):
@@ -107,8 +109,18 @@ def test_masks(dataset_dir):
     print((final_img == final_img2).all())
 
     # visualize_image(img_rgb, final_img2, color_label, color_values)
-    
 
+def visualize_mask(img_rgb, mask_vals, color_label):
+    mask_img_list, final_img = generate_mask_for_image(img_rgb, mask_vals, color_label)
+    mask_len = len(mask_img_list)
+    f, axarr = plt.subplots(mask_len+1)
+    axarr[0].imshow(img_rgb)
+    for i in range(mask_len):
+        cur_mask = mask_img_list[i]
+        val = np.max(cur_mask)
+        cur_mask[np.where(cur_mask == val)] = 255
+        axarr[i+1].imshow(cur_mask)
+    plt.savefig("mygraph.png")
     
 
 if(__name__ == "__main__"):
@@ -128,7 +140,8 @@ if(__name__ == "__main__"):
             "blue" : [255, 0, 0],
             "grey" : [100, 100, 100],
         }
-    generate_dataset("/media/YertleDrive4/layer_grasp/dataset/test", mask_vals, color_label)
+    # generate_dataset("/media/YertleDrive4/layer_grasp/dataset/test", mask_vals, color_label)
+    visualize_mask(img, mask_vals, color_label)
     # mask_img_list, final_img = generate_mask_for_image(img, mask_vals, color_label)
     # visualize_image(img, final_img, color_label, color_values )
     # img_nums = [0, 176, 277, 372, 535, 690, 918]

@@ -39,16 +39,19 @@ if(__name__ == "__main__"):
         mask_imgs["red"] = cv2.inRange(hsv_img, mask_vals["red_low"], mask_vals["red_high"])
         img1 = cv2.cvtColor(mask_imgs["red"], cv2.COLOR_GRAY2BGR)
         img1[np.where((img1==[255, 255, 255]).all(axis=2))] = [0, 0, 255]
-
+        masked_imgs = []
         for color in color_list:
             mask_imgs[color] = cv2.inRange(hsv_img, mask_vals[color+"_low"], mask_vals[color+"_high"])
             mask_imgs[color] = cv2.cvtColor(mask_imgs[color], cv2.COLOR_GRAY2BGR)
-            mask_imgs[color][np.where((mask_imgs[color]==[255, 255, 255]).all(axis=2))] = color_values[color]
-            img1 = cv2.bitwise_or(img1, mask_imgs[color])
+            # mask_imgs[color][np.where((mask_imgs[color]==[255, 255, 255]).all(axis=2))] = color_values[color]
+            masked_imgs.append(np.concatenate((img,mask_imgs[color]), axis=1))
 
 
-        hori = np.concatenate((img, img1), axis=1)
-        cv2.imshow( "image vs mask", hori)
+        # hori = np.concatenate(masked_imgs, axis=1)
+        i=0
+        for img in masked_imgs:
+            cv2.imshow(color_list[i], img)
+            i+=1
 
         cv2.waitKey(0)
         cv2.destroyAllWindows()

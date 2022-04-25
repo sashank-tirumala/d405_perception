@@ -34,8 +34,8 @@ def colormask(filename):
     cv2.createTrackbar(thv, filename, 127,255, nothing)
 
     #read img in both rgb and grayscale
-    img = cv2.imread(filename,1)
-    imgg = cv2.imread(filename,0)
+    img = np.load(filename)
+    imgg = np.load(filename)
 
     #convert rgb to hsv
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -87,7 +87,11 @@ def colormask(filename):
 
     return mask
 
-colormask("/media/YertleDrive4/layer_grasp/images/Camera/0.jpg")
+colormask("/media/YertleDrive4/layer_grasp/dataset/test/rgb/2100.npy")
+#/media/YertleDrive4/layer_grasp/dataset/test/rgb/100.npy
+#/media/YertleDrive4/layer_grasp/dataset/test/rgb/110.npy
+#/media/YertleDrive4/layer_grasp/dataset/test/rgb/886.npy
+#/media/YertleDrive4/layer_grasp/dataset/test/rgb/1056.npy
 
 
 
@@ -99,3 +103,7 @@ colormask("/media/YertleDrive4/layer_grasp/images/Camera/0.jpg")
 #white hue [65 108] saturation [88 120] value [104 255]
 #Yellow hue [65 108] saturation [0 88] value [104 255]
 #Background hue [0 40] saturation [0 255] value [0 255]
+
+
+#Blue hue [77 107] sat [149 255] value [120 255]
+#Grey hue [77 107] sat [0 255] value [0 115]
