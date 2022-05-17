@@ -6,6 +6,7 @@ import shutil
 import rosbag
 from sensor_msgs.msg import Image
 import ros_numpy
+from alive_progress import alive_bar
 
 def create_dataset(bagfile_name, dataset_name, del_if_exists=True, rgbd_topic="d405_rgbd"):
     """
@@ -32,16 +33,19 @@ def create_dataset(bagfile_name, dataset_name, del_if_exists=True, rgbd_topic="d
     os.makedirs(dataset_dir_path)
     os.makedirs(rgb_path)   
     os.makedirs(depth_path)
+    total_num = bagfile.get_message_count()
     i=0
-    for topic, msg, t in bagfile.read_messages():
-        if(topic == rgbd_topic):
-            msg.rgb.__class__ = Image
-            msg.depth.__class__ = Image
-            rgb_img = ros_numpy.numpify(msg.rgb)
-            depth_img = ros_numpy.numpify(msg.depth)
-            np.save(rgb_path+"/"+str(i)+".npy", rgb_img)
-            np.save(depth_path+"/"+str(i)+".npy", depth_img)
-            i+=1
+    with alive_bar(total_num) as bar:
+        for topic, msg, t in bagfile.read_messages():
+            if(topic == rgbd_topic):
+                msg.rgb.__class__ = Image
+                msg.depth.__class__ = Image
+                rgb_img = ros_numpy.numpify(msg.rgb)
+                depth_img = ros_numpy.numpify(msg.depth)
+                np.save(rgb_path+"/"+str(i)+".npy", rgb_img)
+                np.save(depth_path+"/"+str(i)+".npy", depth_img)
+                bar()
+                i+=1
 
         
 if(__name__ == "__main__"):
