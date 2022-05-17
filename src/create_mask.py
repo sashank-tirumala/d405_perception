@@ -5,6 +5,7 @@ import IPython
 import os
 import shutil
 import matplotlib
+matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
 #Blue hue [77 107] sat [149 255] value [120 255]
 #Grey hue [77 107] sat [0 255] value [0 115]
@@ -29,6 +30,7 @@ def generate_mask_for_image(rgb_img, mask_vals, color_label):
         mask_img_list.append(mask_imgs[color])
     mask_img_list = np.stack(mask_img_list, axis=-1)
     final_img = np.amax(mask_img_list, axis=-1)
+    print(mask_img_list.shape)
     return mask_img_list, final_img
 
 def visualize_image(rgb_ori_img, mask_img, color_label, color_values):
@@ -112,29 +114,56 @@ def test_masks(dataset_dir):
 
 def visualize_mask(img_rgb, mask_vals, color_label):
     mask_img_list, final_img = generate_mask_for_image(img_rgb, mask_vals, color_label)
-    mask_len = len(mask_img_list)
-    f, axarr = plt.subplots(mask_len+1)
-    axarr[0].imshow(img_rgb)
-    for i in range(mask_len):
-        cur_mask = mask_img_list[i]
+    img_rgb = img_rgb[..., ::-1]
+    cols = mask_img_list.shape[-1]
+    rows=1
+    fig = plt.figure()
+    fig.tight_layout()
+    ax = []
+    ax.append(fig.add_subplot(1, cols+1, 1) )
+    ax[-1].set_title("RGB Image")
+    plt.imshow(img_rgb)
+    for i in range(cols):
+        ax.append(fig.add_subplot(1, cols+1, i+2) )
+        cur_mask = mask_img_list[:,:,i]
         val = np.max(cur_mask)
         cur_mask[np.where(cur_mask == val)] = 255
-        axarr[i+1].imshow(cur_mask)
-    plt.savefig("mygraph.png")
+        ax[-1].set_title(str(i+2))
+        plt.imshow(cur_mask)
     
+    plt.savefig("visualize_mask")
+    plt.close()
+    plt.show()    
 
 if(__name__ == "__main__"):
     # test_masks("/media/YertleDrive4/layer_grasp/dataset/test")
-    img = np.load("/media/YertleDrive4/layer_grasp/dataset/test/rgb/217.npy")
+    img = np.load("/media/YertleDrive4/layer_grasp/dataset/4cloth/rgb/217.npy")
+    # mask_vals = {
+    #         "blue_low": np.array([77, 149, 120], np.uint8),
+    #         "blue_high": np.array([107, 255, 255], np.uint8),
+    #         "grey_low": np.array([77, 0, 0], np.uint8),
+    #         "grey_high": np.array([107, 255, 115], np.uint8),
+    #     }
     mask_vals = {
-            "blue_low": np.array([77, 149, 120], np.uint8),
-            "blue_high": np.array([107, 255, 255], np.uint8),
-            "grey_low": np.array([77, 0, 0], np.uint8),
-            "grey_high": np.array([107, 255, 115], np.uint8),
-        }
+        "blue_low": np.array([86, 189, 56], np.uint8),
+        "blue_high": np.array([105, 255, 255], np.uint8),
+        "grey_low": np.array([93, 35, 36], np.uint8),
+        "grey_high": np.array([134, 207, 160], np.uint8),
+        "white_low": np.array([80, 36, 166], np.uint8),
+        "white_high": np.array([110, 166, 255], np.uint8),
+        "green_low": np.array([21, 105, 54], np.uint8),
+        "green_high": np.array([86, 220, 255], np.uint8),
+
+    }
+    # color_label ={
+    #     'blue':2,
+    #     'grey':1
+    # }
     color_label ={
-        'blue':2,
-        'grey':1
+        'grey':4,
+        'green':3,
+        'white':2,
+        'blue':1
     }
     color_values={
             "blue" : [255, 0, 0],
