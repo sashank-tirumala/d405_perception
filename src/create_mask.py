@@ -8,7 +8,7 @@ import matplotlib
 matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
 from alive_progress import alive_bar
-
+import argparse
 #Blue hue [77 107] sat [149 255] value [120 255]
 #Grey hue [77 107] sat [0 255] value [0 115]
 def generate_mask_for_image(rgb_img, mask_vals, color_label):
@@ -139,42 +139,62 @@ def visualize_mask(img_rgb, mask_vals, color_label):
     plt.close()
     plt.show()    
 
+def get_mask_val_and_color_label(pth):
+    color_label={}
+    mask_vals={}
+    i=1
+    with open(pth) as f:
+        for line in f.readlines():
+            vals=line.split(",")
+            color_label[vals[0]] = i
+            mask_vals[vals[0]+"_low"] = np.array([vals[1], vals[3], vals[5]], np.uint8)
+            mask_vals[vals[0]+"_high"] = np.array([vals[2], vals[4], vals[6]], np.uint8)
+            i = i + 1
+    for vals in color_label.keys():
+        color_label[vals] = i - color_label[vals]
+    print(color_label)
+    print(mask_vals)
+    pass
 if(__name__ == "__main__"):
     # test_masks("/media/YertleDrive4/layer_grasp/dataset/test")
-    img = np.load("/media/YertleDrive4/layer_grasp/dataset/4cloth/rgb/2267.npy")
+    parser = argparse.ArgumentParser(description='Creates Ground-Truth Masks with HSV Data')
+    parser.add_argument('-p','--path', help='path to image', required=True)
+    args = vars(parser.parse_args())
+    get_mask_val_and_color_label(args['path'])
+    # img = np.load("/media/YertleDrive4/layer_grasp/dataset/4cloth/rgb/2267.npy")
     # mask_vals = {
     #         "blue_low": np.array([77, 149, 120], np.uint8),
     #         "blue_high": np.array([107, 255, 255], np.uint8),
     #         "grey_low": np.array([77, 0, 0], np.uint8),
     #         "grey_high": np.array([107, 255, 115], np.uint8),
     #     }
-    mask_vals = {
-        "blue_low": np.array([86, 189, 56], np.uint8),
-        "blue_high": np.array([105, 255, 255], np.uint8),
-        "grey_low": np.array([93, 35, 36], np.uint8),
-        "grey_high": np.array([134, 207, 160], np.uint8),
-        "white_low": np.array([80, 36, 166], np.uint8),
-        "white_high": np.array([110, 166, 255], np.uint8),
-        "green_low": np.array([21, 105, 54], np.uint8),
-        "green_high": np.array([86, 220, 255], np.uint8),
+    # mask_vals = {
+    #     "blue_low": np.array([86, 189, 56], np.uint8),
+    #     "blue_high": np.array([105, 255, 255], np.uint8),
+    #     "grey_low": np.array([93, 35, 36], np.uint8),
+    #     "grey_high": np.array([134, 207, 160], np.uint8),
+    #     "white_low": np.array([80, 36, 166], np.uint8),
+    #     "white_high": np.array([110, 166, 255], np.uint8),
+    #     "green_low": np.array([21, 105, 54], np.uint8),
+    #     "green_high": np.array([86, 220, 255], np.uint8),
 
-    }
-    # color_label ={
-    #     'blue':2,
-    #     'grey':1
     # }
-    color_label ={
-        'grey':4,
-        'green':3,
-        'white':2,
-        'blue':1
-    }
-    color_values={
-            "blue" : [255, 0, 0],
-            "grey" : [100, 100, 100],
-        }
-    generate_dataset("/media/YertleDrive4/layer_grasp/dataset/4cloth", mask_vals, color_label)
-    # visualize_mask(img, mask_vals, color_label)
+    # # color_label ={
+    # #     'blue':2,
+    # #     'grey':1
+    # # }
+    # color_label ={
+    #     'grey':4,
+    #     'green':3,
+    #     'white':2,
+    #     'blue':1
+    # }
+    # color_values={
+    #         "blue" : [255, 0, 0],
+    #         "grey" : [100, 100, 100],
+    #     }
+    # generate_dataset("/media/YertleDrive4/layer_grasp/dataset/4cloth", mask_vals, color_label)
+    # # visualize_mask(img, mask_vals, color_label)
     # mask_img_list, final_img = generate_mask_for_image(img, mask_vals, color_label)
     # visualize_image(img, final_img, color_label, color_values )
     # img_nums = [0, 176, 277, 372, 535, 690, 918]
