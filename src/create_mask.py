@@ -152,15 +152,16 @@ def get_mask_val_and_color_label(pth):
             i = i + 1
     for vals in color_label.keys():
         color_label[vals] = i - color_label[vals]
-    print(color_label)
-    print(mask_vals)
-    pass
+    return color_label, mask_vals
 if(__name__ == "__main__"):
     # test_masks("/media/YertleDrive4/layer_grasp/dataset/test")
     parser = argparse.ArgumentParser(description='Creates Ground-Truth Masks with HSV Data')
     parser.add_argument('-p','--path', help='path to image', required=True)
+    parser.add_argument('-dp','--datapath', help='path to image', required=True)
+
     args = vars(parser.parse_args())
-    get_mask_val_and_color_label(args['path'])
+    color_label, mask_vals = get_mask_val_and_color_label(args['path'])
+    generate_dataset(args["datapath"], mask_vals, color_label)
     # img = np.load("/media/YertleDrive4/layer_grasp/dataset/4cloth/rgb/2267.npy")
     # mask_vals = {
     #         "blue_low": np.array([77, 149, 120], np.uint8),
