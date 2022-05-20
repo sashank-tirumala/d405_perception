@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import argparse
-
+import os
 # parser =argparse.ArgumentParser()
 # parser.add_argument('input_img', help = 'the input image file')
 # args = parser.parse_args()
@@ -33,26 +33,25 @@ def colormask(filename):
     cv2.createTrackbar(thv, filename, 127,255, nothing)
 
     #read img in both rgb and grayscale
-    nums = np.random.randint(0,4100, size=3)
+    max_num = len(os.listdir(filename))
+    nums = np.random.randint(0,max_num, size=3)
     imgs = []
     for num in nums:
         img = np.load(filename+"/"+str(num)+".npy")
         imgs.append(img)
     imgs = np.concatenate(imgs, axis=1)
-    nums = np.random.randint(0,4100, size=3)
+    nums = np.random.randint(0,max_num, size=3)
     imgs2 = []
     for num in nums:
         img = np.load(filename+"/"+str(num)+".npy")
         imgs2.append(img)
     imgs2 = np.concatenate(imgs2, axis=1)
-    print(imgs.shape, imgs2.shape)
     imgs =  np.concatenate([imgs, imgs2], axis=0)
     scale_percent = 50 # percent of original size
     width = int(imgs.shape[1] * scale_percent / 100)
     height = int(imgs.shape[0] * scale_percent / 100)
     dim = (width, height)
     imgs = cv2.resize(imgs, dim, interpolation = cv2.INTER_AREA)
-    print(imgs.shape)
 
     #convert rgb to hsv
     hsv_img = cv2.cvtColor(imgs, cv2.COLOR_BGR2HSV)
