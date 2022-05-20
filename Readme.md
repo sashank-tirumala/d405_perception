@@ -9,3 +9,7 @@
 7. In order to collect data use: `rosbag record -O <name> d405_rgbd`
 8. In order to create a directory with RGB and Depth images use:  ` python create_dataset.py -b <bagfilename> -d <datasetname>`
 9. If you cannot open the display, exit singularity `xhost +local:`
+10. In order to find hsv values run `python hsv_mask_multi.py -p <dataset_path>/rgb `
+11. Store the HSV values in a text file such that:
+    1. First row is first cloth, second row is second cloth and so on
+    2. 1st column is color of the cloth, 2nd column is hue_low, 3rd column is hue_high, 4th column is saturation low, 5th col is saturation_high, 6th column is value_low, 7th col is value_high
