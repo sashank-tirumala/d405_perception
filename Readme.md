@@ -13,3 +13,4 @@
 11. Store the HSV values in a text file such that:
     1. First row is first cloth, second row is second cloth and so on
     2. 1st column is color of the cloth, 2nd column is hue_low, 3rd column is hue_high, 4th column is saturation low, 5th col is saturation_high, 6th column is value_low, 7th col is value_high
+12. To create masks run ` python create_mask -p <text_file> -dp <path to dataset>`
